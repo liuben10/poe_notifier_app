@@ -24,4 +24,31 @@ data class PoeItem(
         val sockets: List<PoeSockets> = mutableListOf(),
         val inventoryId: String = "",
         val utilityMods: List<String> = mutableListOf()
-)
+) {
+
+    fun kvString(key: String, value: String): String {
+        return "$key: $value"
+    }
+
+    fun printModList(modName: String, modList: List<String>): String {
+        val sb = StringBuilder()
+        sb.append("\n---").append(modName).append("---\n")
+        for (mod in modList) {
+            sb.append(mod).append("\n")
+        }
+        return sb.toString()
+    }
+
+    fun toPrettyString(): String {
+        val sb = StringBuilder()
+        sb.append("===========")
+        sb.append(kvString("name", name)).append("\n")
+        sb.append(kvString("league", league)).append("\n")
+        sb.append(printModList("craftedMods", craftedMods))
+        sb.append(printModList("explicitMods", explicitMods))
+        sb.append(printModList("implicitMods", implicitMods))
+        sb.append(printModList("enchantMods", enchantMods))
+        sb.append(printModList("utilityMods", utilityMods))
+        return sb.toString()
+    }
+}

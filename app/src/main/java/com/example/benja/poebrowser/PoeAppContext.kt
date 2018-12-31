@@ -5,7 +5,6 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.example.benja.poebrowser.services.PoeItemFilterServiceChecker
 import com.example.benja.poebrowser.services.PoeNinjaChecker
-import com.example.benja.poebrowser.services.PublicStashChecker
 
 class PoeAppContext {
     companion object {
