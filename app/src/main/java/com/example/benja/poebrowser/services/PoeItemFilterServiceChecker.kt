@@ -8,13 +8,13 @@ import android.util.Log
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.beust.klaxon.JsonArray
-import com.beust.klaxon.Klaxon
 import com.example.benja.poebrowser.CHANNEL_ID
 import com.example.benja.poebrowser.PoeAppContext
 import com.example.benja.poebrowser.R
-import com.example.benja.poebrowser.model.PoeItem
+import com.example.poe_app_kt.model.PoeItemFilter
+import com.example.poe_app_kt.model.PoeItemFilterContainer
+import com.example.poe_app_kt.model.PoeModStringItemFilter
+import com.google.gson.Gson
 import java.util.*
 
 const val ITEMS_DETECTED_SIGNAL: String = "ITEMS_DETECTED"
@@ -22,26 +22,32 @@ const val ITEMS_LABEL: String = "ITEMS"
 class PoeItemFilterServiceChecker(
         val context: Context
 ) {
-    val url = "https://codathon-188102.appspot.com/public_stash_items"
-    val klaxon: Klaxon = Klaxon()
+    val testUrl = "http://10.0.2.2:8080/public_stash_items"
+    val url = "http://10.0.2.2:8080/public_stash_items"
+    val gson: Gson = Gson()
 
     fun pullAndFilterItems(next_check_id: String) {
         val stashFilterServiceUrl = constructRequesturl(next_check_id)
-        val stringRequest = StringRequest(
-                Request.Method.GET,
+        val filters = itemFiltersForTest()
+        val stringRequest = PostStringRequest(
+                Request.Method.POST,
                 stashFilterServiceUrl,
-                Response.Listener<String> { res ->
+                Response.Listener { res ->
                     val poeItems = parseChanges(res)
                     Log.i("Poe-Stash-Filter", "Was able to parse item list")
                     Log.i("Poe-Stash-Filter", "Found Items=$poeItems")
-                    if (poeItems.size > 0) {
+                    if (poeItems.items_by_stash.isNotEmpty()) {
                         sendNotification(poeItems, next_check_id)
                         sendBroadcast(poeItems)
                     }
                 },
                 Response.ErrorListener { res ->
                     Log.e("Poe-Stash-Filter", "Error, failed $res")
-                }
+                },
+                filters,
+                mutableMapOf(
+                    "Content-Type" to "application/json"
+                )
         )
 
         stringRequest.retryPolicy = DefaultRetryPolicy(
@@ -53,27 +59,36 @@ class PoeItemFilterServiceChecker(
         PoeAppContext.getRequestQueue(context).add(stringRequest)
     }
 
-    private fun sendBroadcast(poeItems: List<PoeItem>) {
+    private fun sendBroadcast(stashes: PoeItemFilterContainer) {
         val intentToBroadcast = Intent(ITEMS_DETECTED_SIGNAL)
         val message = StringBuilder()
-        for (item in poeItems) {
-            message.append("\n==========\n")
-                    .append(item.toPrettyString())
+        for(stash in stashes.items_by_stash) {
+            message.append("\n++++++++++\n").append("\n")
+            message.append("accountName=${stash.accountName}\n")
+            message.append("stash=${stash.id}\n")
+            for (item in stash.items) {
+                message.append("\n==========\n")
+                        .append(item.toPrettyString())
+            }
         }
+
         intentToBroadcast.putExtra(ITEMS_LABEL, message.toString())
         context.sendBroadcast(intentToBroadcast)
     }
 
-    fun sendNotification(items: List<PoeItem>, next_check_id: String) {
+    fun sendNotification(stashes: PoeItemFilterContainer, next_check_id: String) {
         val detectedItems = StringBuilder()
-        detectedItems.append("---------")
-        for(item in items) {
-            detectedItems.append(item).append("\n")
+        for (stash in stashes.items_by_stash) {
+            detectedItems.append(stash.accountName).append("[")
+            for(item in stash.items) {
+                detectedItems.append(item.name).append(", ")
+            }
+            detectedItems.append("]\n")
         }
-        var mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+
+        val mBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle("Detected Items Based on your Filters in NextChangeId={${next_check_id}}")
-                .setContentText(detectedItems.toString())
                 .setStyle(NotificationCompat.BigTextStyle()
                         .bigText(detectedItems.toString()))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -84,12 +99,21 @@ class PoeItemFilterServiceChecker(
         }
     }
 
-    private fun parseChanges(raw: String): List<PoeItem> {
-        val parsed = klaxon.parseArray<PoeItem>(raw)!!
+    private fun parseChanges(raw: String): PoeItemFilterContainer {
+        val parsed = gson.fromJson<PoeItemFilterContainer>(raw, PoeItemFilterContainer::class.java)!!
         return parsed
     }
 
     private fun constructRequesturl(next_check_id: String): String {
         return this.url + "?id=" + next_check_id + "&shouldFilter=true"
+    }
+
+    private fun itemFiltersForTest(): String {
+//        val loreweaveFilter = PoeItemFilter("Loreweave Filter", "Betrayal")
+//        loreweaveFilter.name = "Loreweave"
+        val energyShieldFilter = PoeItemFilter("Energy Shield Filter", "Betrayal")
+        energyShieldFilter.explicitMods.add(PoeModStringItemFilter("^\\+(.+) to maximum Energy Shield$", 10))
+//        energyShieldFilter.explicitMods.add(PoeModStringItemFilter("^(.+)% increased Energy Shield$", 10))
+        return gson.toJson(mutableListOf(energyShieldFilter))
     }
 }

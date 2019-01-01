@@ -4,10 +4,8 @@ import android.content.Context
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.beust.klaxon.Json
-import com.beust.klaxon.Klaxon
 import com.example.benja.poebrowser.PoeAppContext
+import com.google.gson.Gson
 
 typealias WebListener = (String) -> Unit
 
@@ -15,6 +13,8 @@ class PoeNinjaChecker(
         val context: Context
 ) {
     val url = "https://poe.ninja/api/Data/GetStats"
+
+    val gson = Gson()
 
     val listeners = arrayListOf<WebListener>()
 
@@ -34,12 +34,11 @@ class PoeNinjaChecker(
     }
 
     private fun extractNextChangeId(raw: String): String {
-        val struct = Klaxon().parse<PoeNinjaIdContainer>(raw)
-        return struct!!.nextChangeId
+        val struct = gson.fromJson(raw, PoeNinjaIdContainer::class.java)
+        return struct!!.next_change_id
     }
 }
 
 data class PoeNinjaIdContainer (
-    @Json(name="next_change_id")
-    val nextChangeId: String
+    val next_change_id: String
 )

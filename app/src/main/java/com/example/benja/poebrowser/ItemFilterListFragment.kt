@@ -27,6 +27,8 @@ class ItemFilterListFragment : Fragment() {
 
     var handler: Handler? = null
 
+    var receiver: BroadcastReceiver? = null
+
     class ItemFilterBroadCastReceiver(val viewToUpdate: TextView) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (ITEMS_DETECTED_SIGNAL.equals(intent!!.action)) {
@@ -51,12 +53,20 @@ class ItemFilterListFragment : Fragment() {
         super.onStart()
         val contentBody: TextView = view!!.findViewById(R.id.render)
         val intentFilter = IntentFilter(ITEMS_DETECTED_SIGNAL)
-        this.activity!!.baseContext.registerReceiver(ItemFilterBroadCastReceiver(contentBody), intentFilter)
+        this.receiver = ItemFilterBroadCastReceiver(contentBody)
+        this.activity!!.baseContext.registerReceiver(receiver, intentFilter)
 
         val runnable = updateNotify()
         runnable.run()
 
         createNotificationChannel()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (this.receiver != null) {
+            this.activity!!.baseContext.unregisterReceiver(this.receiver)
+        }
     }
 
     fun updateNotify(): Runnable {
