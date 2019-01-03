@@ -2,4 +2,6 @@
     <string name="app_name">PoeBrowser</string>
     <string name="channel_name">poe_item_notifications</string>
     <string name="channel_description">This is the notification channel with which we use to emit detected POE Items</string>
+    <string name="add_filter">Add Filter</string>
+    <string name="navigation">Navigation</string>
 </resources>
