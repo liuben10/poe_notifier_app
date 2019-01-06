@@ -1,5 +1,10 @@
 package com.example.benja.poebrowser
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -10,6 +15,8 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
+import com.example.benja.poebrowser.tasks.UpdateNotifierTask
 
 const val CHANNEL_ID: String = "POE_ITEMS_NOTIFICATION"
 
@@ -34,6 +41,42 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val runnable = updateNotify()
+        runnable.run()
+
+        createNotificationChannel()
+    }
+
+    fun updateNotify(): Runnable {
+        return Runnable {
+            val notifier = UpdateNotifierTask(this)
+            try {
+                notifier.execute()
+            } finally {
+                PoeAppContext.getHandler()!!.postDelayed(updateNotify(), 1000 * 240)
+            }
+        }
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = getString(R.string.channel_name)
+            val descriptionText = getString(R.string.channel_description)
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                    this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -44,12 +87,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun swapContentBody(menuItem: MenuItem) {
+        val action = Router.route(menuItem.itemId)
+        this.sendBroadcast(action)
+    }
+
     private fun bindDrawerLayout() {
         drawerLayout = findViewById(R.id.drawer_layout)
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             menuItem.isChecked = true
             drawerLayout!!.closeDrawers()
+            swapContentBody(menuItem)
             true
         }
         drawerLayout!!.addDrawerListener(
@@ -68,7 +117,6 @@ class MainActivity : AppCompatActivity() {
                     override fun onDrawerClosed(drawerView: View) {
                         // Respond when the drawer is closed
                         Log.i("MainActivity", "Drawer Closed")
-
                     }
 
                     override fun onDrawerStateChanged(newState: Int) {

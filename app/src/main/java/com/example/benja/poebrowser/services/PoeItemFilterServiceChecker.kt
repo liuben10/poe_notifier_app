@@ -9,15 +9,15 @@ import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
 import com.example.benja.poebrowser.CHANNEL_ID
+import com.example.benja.poebrowser.ITEMS_DETECTED_SIGNAL
 import com.example.benja.poebrowser.PoeAppContext
 import com.example.benja.poebrowser.R
-import com.example.poe_app_kt.model.PoeItemFilter
+import com.example.benja.poebrowser.model.PoeItemFilter
 import com.example.poe_app_kt.model.PoeItemFilterContainer
 import com.example.poe_app_kt.model.PoeModStringItemFilter
 import com.google.gson.Gson
 import java.util.*
 
-const val ITEMS_DETECTED_SIGNAL: String = "ITEMS_DETECTED"
 const val ITEMS_LABEL: String = "ITEMS"
 class PoeItemFilterServiceChecker(
         val context: Context

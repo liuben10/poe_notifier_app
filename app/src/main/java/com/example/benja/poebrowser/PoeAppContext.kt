@@ -1,6 +1,8 @@
 package com.example.benja.poebrowser
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Handler
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.example.benja.poebrowser.services.PoeItemFilterServiceChecker
@@ -8,6 +10,16 @@ import com.example.benja.poebrowser.services.PoeNinjaChecker
 
 class PoeAppContext {
     companion object {
+
+        @Volatile
+        private var handler: Handler? = null
+
+        fun getHandler(): Handler {
+            if (handler == null) {
+                this.handler = Handler()
+            }
+            return checkNotNull(this.handler)
+        }
 
         @Volatile
         private var requestQueue: RequestQueue? = null
@@ -20,6 +32,7 @@ class PoeAppContext {
             return checkNotNull(requestQueue)
         }
 
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var poeItemFilterServiceChecker: PoeItemFilterServiceChecker? = null
 
@@ -30,6 +43,7 @@ class PoeAppContext {
             return checkNotNull(poeItemFilterServiceChecker)
         }
 
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var poeNinjaChecker: PoeNinjaChecker? = null
 

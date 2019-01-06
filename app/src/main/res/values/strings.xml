@@ -4,4 +4,8 @@
     <string name="channel_description">This is the notification channel with which we use to emit detected POE Items</string>
     <string name="add_filter">Add Filter</string>
     <string name="navigation">Navigation</string>
+    <string name="initial_text">Please wait while we fetch items</string>
+    <string name="filter_json">Filter Json</string>
+    <string name="button">Submit</string>
+    <string name="list_items">List Items</string>
 </resources>

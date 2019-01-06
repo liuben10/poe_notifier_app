@@ -1,8 +1,6 @@
-package com.example.poe_app_kt.model
+package com.example.benja.poebrowser.model
 
-import com.example.benja.poebrowser.model.PoeItemProp
-import com.example.benja.poebrowser.model.PoeRequirementSpec
-import com.example.benja.poebrowser.model.PoeSockets
+import com.example.poe_app_kt.model.PoeModStringItemFilter
 
 data class PoeItemFilter (
         val id: String,
