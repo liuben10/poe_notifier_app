@@ -34,13 +34,13 @@ class PoeAppContext {
         }
 
         @Volatile
-        private var poeAppItemFilterDaoDumb: PoeItemFilterDao? = null
+        private var poeItemFilterDao: PoeItemFilterDao? = null
 
-        fun getPoeItemFilterDumbDao(context: Context): PoeItemFilterDao {
-            if (poeAppItemFilterDaoDumb == null) {
-                this.poeAppItemFilterDaoDumb = PoeItemFilterDao(context)
+        fun getPoeItemFilterDao(context: Context): PoeItemFilterDao {
+            if (poeItemFilterDao == null) {
+                this.poeItemFilterDao = PoeItemFilterDao(context)
             }
-            return checkNotNull(this.poeAppItemFilterDaoDumb)
+            return checkNotNull(this.poeItemFilterDao)
         }
 
         @Volatile

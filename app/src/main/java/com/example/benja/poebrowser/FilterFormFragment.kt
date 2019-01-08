@@ -23,9 +23,9 @@ class FilterFormFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        filterNameField = this.activity!!.findViewById(R.id.filter_name)
+        filterNameField = this.activity!!.findViewById<EditText>(R.id.filter_name)
         leagueField = this.activity!!.findViewById(R.id.league)
-        this.explicitModsFilterContainerFragment = this.activity!!.supportFragmentManager.findFragmentById(R.id.explicit_mods_container) as ExplicitModsFilterContainerFragment
+        this.explicitModsFilterContainerFragment = this.childFragmentManager.findFragmentById(R.id.explicit_mods_container) as ExplicitModsFilterContainerFragment
         submitButton = this.activity!!.findViewById(R.id.save_filter_button)
         // Really dumb button action
         submitButton.setOnClickListener {
@@ -35,7 +35,7 @@ class FilterFormFragment : Fragment() {
                 val filterToSave = PoeItemFilter(filterName, leagueName)
                 val explicitModFilters = explicitModsFilterContainerFragment.explicitMods()
                 filterToSave.explicitMods.addAll(explicitModFilters)
-                val savedId = PoeAppContext.getPoeItemFilterDumbDao(this.activity!!).save(filterToSave)
+                val savedId = PoeAppContext.getPoeItemFilterDao(this.activity!!).save(filterToSave)
                 Log.i("FilterFormFragment", "Saved filter, id=${savedId}")
         }
     }

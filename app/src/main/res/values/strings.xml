@@ -17,4 +17,5 @@
     <string name="filter_regex">filter_regex</string>
     <string name="remove">Remove</string>
     <string name="remove_button">remove_button</string>
+    <string name="list_filters">List Filters</string>
 </resources>

@@ -7,10 +7,14 @@
             android:title="@string/add_filter"
             />
 
-
         <item android:id="@+id/list_items"
-            android:icon="@drawable/add_filter"
+            android:icon="@drawable/list_items"
             android:title="@string/list_items"
+            />
+
+        <item android:id="@+id/list_filters"
+            android:icon="@drawable/list_filters"
+            android:title="@string/list_filters"
             />
 
     </group>

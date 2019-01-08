@@ -3,7 +3,6 @@ package com.example.benja.poebrowser
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -15,7 +14,6 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import com.example.benja.poebrowser.tasks.UpdateNotifierTask
 
 const val CHANNEL_ID: String = "POE_ITEMS_NOTIFICATION"
@@ -29,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.nav_drawer)
         bindDrawerLayout()
         bindToolBar()
+        PoeAppContext.getPoeItemFilterDao(this)
     }
 
     private fun bindToolBar() {

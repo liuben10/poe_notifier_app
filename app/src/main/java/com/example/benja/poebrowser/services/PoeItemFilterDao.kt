@@ -5,18 +5,22 @@ import android.content.Context
 import android.database.Cursor
 import android.util.Log
 import com.example.benja.poebrowser.*
-import com.example.benja.poebrowser.model.PoeItem
 import com.example.benja.poebrowser.model.PoeItemFilter
 import com.example.poe_app_kt.model.PoeModStringItemFilter
-import com.google.gson.Gson
 
 class PoeItemFilterDao(val context: Context) {
 
-    val db = FilterDbHelper(context).writableDatabase
+    val helper = FilterDbHelper(context)
+    val db = helper.writableDatabase
     val MAX_COUNT = 5
 
+    init {
+        this.dropTable() // TODO REMOVE FROM TEST
+        helper.onCreate(db)
+    }
+
     fun save(itemFilter: PoeItemFilter): Long? {
-        if (this.count() < MAX_COUNT) {
+        if (this.count() >= MAX_COUNT) {
             Log.e("PoeItemFilterDao", "Error, at the maximum number ($MAX_COUNT) filters")
             return -1
         } else {
@@ -30,12 +34,20 @@ class PoeItemFilterDao(val context: Context) {
         }
     }
 
-    private fun all(): Cursor {
-        return db.query(FIND_ALL_FILTERS, null, null, null, null, null, null)
+    fun allFiltersCursor(): Cursor {
+        return db.query(
+                FilterContract.FilterEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        )
     }
 
-    fun findAll(): List<PoeItemFilter> {
-        val cursor = this.all()
+    fun allFiltersList(): List<PoeItemFilter> {
+        val cursor = this.allFiltersCursor()
         val items = mutableListOf<PoeItemFilter>()
         with(cursor) {
             while (moveToNext()) {
@@ -46,7 +58,7 @@ class PoeItemFilterDao(val context: Context) {
     }
 
     fun count(): Int {
-       return this.findAll().size
+       return this.allFiltersList().size
     }
 
     fun fromCursor(cursor: Cursor): PoeItemFilter {
@@ -61,6 +73,10 @@ class PoeItemFilterDao(val context: Context) {
 
     fun query(itemFilter: PoeItemFilter): PoeItemFilter {
         throw UnsupportedOperationException("TODO Implement the query operation")
+    }
+
+    fun dropTable() {
+        this.db.execSQL(DELETE_FILTER_TABLE)
     }
 
     fun get(id: Long): PoeItemFilter {

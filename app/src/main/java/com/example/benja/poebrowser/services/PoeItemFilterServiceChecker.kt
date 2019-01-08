@@ -8,13 +8,9 @@ import android.util.Log
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
-import com.example.benja.poebrowser.CHANNEL_ID
-import com.example.benja.poebrowser.ITEMS_DETECTED_SIGNAL
-import com.example.benja.poebrowser.PoeAppContext
-import com.example.benja.poebrowser.R
-import com.example.benja.poebrowser.model.PoeItemFilter
+import com.example.benja.poebrowser.*
+import com.example.benja.poebrowser.model.PoeItem
 import com.example.poe_app_kt.model.PoeItemFilterContainer
-import com.example.poe_app_kt.model.PoeModStringItemFilter
 import com.google.gson.Gson
 import java.util.*
 
@@ -37,7 +33,7 @@ class PoeItemFilterServiceChecker(
                 Request.Method.POST,
                 stashFilterServiceUrl,
                 Response.Listener { res ->
-                    val poeItems = parseChanges(res)
+                    val poeItems = PoeItemParser.parseChanges(res)
                     Log.i("Poe-Stash-Filter", "Was able to parse item list")
                     Log.i("Poe-Stash-Filter", "Found Items=$poeItems")
                     if (poeItems.items_by_stash.isNotEmpty()) {
@@ -66,18 +62,7 @@ class PoeItemFilterServiceChecker(
 
     private fun sendBroadcast(stashes: PoeItemFilterContainer) {
         val intentToBroadcast = Intent(ITEMS_DETECTED_SIGNAL)
-        val message = StringBuilder()
-        for(stash in stashes.items_by_stash) {
-            message.append("\n++++++++++\n").append("\n")
-            message.append("accountName=${stash.accountName}\n")
-            message.append("stash=${stash.id}\n")
-            for (item in stash.items) {
-                message.append("\n==========\n")
-                        .append(item.toPrettyString())
-            }
-        }
-
-        intentToBroadcast.putExtra(ITEMS_LABEL, message.toString())
+        intentToBroadcast.putExtra(ITEMS_LABEL, gson.toJson(stashes)) // TODO Fix this later
         context.sendBroadcast(intentToBroadcast)
     }
 
@@ -104,17 +89,12 @@ class PoeItemFilterServiceChecker(
         }
     }
 
-    private fun parseChanges(raw: String): PoeItemFilterContainer {
-        val parsed = gson.fromJson<PoeItemFilterContainer>(raw, PoeItemFilterContainer::class.java)!!
-        return parsed
-    }
-
     private fun constructRequesturl(next_check_id: String): String {
-        return this.url + "?id=" + next_check_id + "&shouldFilter=true"
+        return this.url + "?id=" + next_check_id + "&shouldFilter=true&num_stashes=2"
     }
 
     private fun itemFiltersForTest(): String? {
-        val allFilters = PoeAppContext.getPoeItemFilterDumbDao(this.context).findAll()
+        val allFilters = PoeAppContext.getPoeItemFilterDao(this.context).allFiltersList()
         if (allFilters.size > 0) {
             return gson.toJson(allFilters)
         }

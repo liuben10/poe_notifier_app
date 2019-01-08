@@ -24,7 +24,7 @@ object FilterContract {
         const val ENCHANT_MODS_NAME = "ecnhant_mods"
         const val UTILITY_MODS_NAME = "utility_mods"
         const val REQUIREMENTS_NAME = "requirements"
-        const val NAME_COLUMN_NAME = "name"
+        const val ITEM_NAME = "name"
         const val SOCKETS_NAME = "sockets"
         const val TABLE_NAME = "poe_filter"
     }
