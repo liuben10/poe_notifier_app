@@ -3,8 +3,9 @@ package com.example.benja.poebrowser.model
 import com.example.poe_app_kt.model.PoeModStringItemFilter
 
 data class PoeItemFilter (
-        val id: String,
+        val filterName: String? = null,
         val league: String,
+        var id: Long? = null,
         var required: Boolean = false,
         var minIlvl: Int? = -1,
         var maxIlvl: Int? = -1,

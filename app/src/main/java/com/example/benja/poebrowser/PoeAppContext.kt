@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Handler
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
+import com.example.benja.poebrowser.services.PoeItemFilterDao
 import com.example.benja.poebrowser.services.PoeItemFilterServiceChecker
 import com.example.benja.poebrowser.services.PoeNinjaChecker
 
@@ -19,6 +20,16 @@ class PoeAppContext {
                 this.handler = Handler()
             }
             return checkNotNull(this.handler)
+        }
+
+        @Volatile
+        private var poeAppItemFilterDaoDumb: PoeItemFilterDao? = null
+
+        fun getPoeItemFilterDumbDao(context: Context): PoeItemFilterDao {
+            if (poeAppItemFilterDaoDumb == null) {
+                this.poeAppItemFilterDaoDumb = PoeItemFilterDao(context)
+            }
+            return checkNotNull(this.poeAppItemFilterDaoDumb)
         }
 
         @Volatile

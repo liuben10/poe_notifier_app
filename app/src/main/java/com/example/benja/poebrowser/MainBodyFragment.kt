@@ -37,7 +37,7 @@ class MainBodyFragment : Fragment() {
         this.inflater = inflater
         this.container = container
 
-        return inflater.inflate(R.layout.main_body_fragment, container, true)
+        return inflater.inflate(R.layout.main_body_fragment, container, false)
     }
 
     override fun onStart() {
@@ -48,7 +48,7 @@ class MainBodyFragment : Fragment() {
 
     fun initializeState() {
         layoutView = this.activity!!.findViewById(R.id.main_body_fragment_layout)
-        navigateToState(APP_STATE.FRAGMENTS_LIST)
+        addToState(APP_STATE.FILTER_FORM)
 //        val transaction = this.fragmentManager!!.beginTransaction()
 //        transaction.add(newLayoutView.id, APP_STATE.FRAGMENTS_LIST.fragmentInstance())
 //        transaction.commit()
@@ -67,6 +67,13 @@ class MainBodyFragment : Fragment() {
             navigateToState(app_state)
             this.currentState = app_state
         }
+    }
+
+    fun addToState(app_state: APP_STATE) {
+        val transaction = this.activity!!.supportFragmentManager.beginTransaction()
+        transaction.add(this.layoutView.id, app_state.fragmentInstance())
+        //            transaction.addToBackStack("current_state_update_${app_state.name}")
+        transaction.commit()
     }
 
     fun navigateToState(app_state: APP_STATE) {

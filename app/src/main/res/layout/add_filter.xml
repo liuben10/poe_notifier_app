@@ -1,42 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    android:gravity="center">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="1200dp"
+                    android:orientation="vertical"
+                    >
+                        <EditText
+                            android:id="@+id/filter_name"
+                            android:layout_width="400dp"
+                            android:layout_height="40dp"
+                            android:inputType="text"
+                            android:layout_marginBottom="20dp"
+                            android:hint="@string/filter_name"
+                            style="@style/Widget.AppCompat.EditText"
+                            />
+                        <EditText
+                            android:id="@+id/league"
+                            android:layout_width="400dp"
+                            android:layout_height="40dp"
+                            android:inputType="text"
+                            android:layout_marginBottom="20dp"
+                            android:hint="@string/league"
+                            style="@style/Widget.AppCompat.EditText"
+                            />
+                        <EditText
+                            android:id="@+id/name"
+                            android:layout_width="400dp"
+                            android:layout_height="40dp"
+                            android:inputType="text"
+                            android:layout_marginBottom="20dp"
+                            android:hint="@string/name"
+                            style="@style/Widget.AppCompat.EditText"
+                            />
 
-    <EditText
-        android:id="@+id/comments_textbox"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="188dp"
-        android:hint="@string/filter_json"
-        android:inputType="textMultiLine"
-        android:longClickable="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+                        <fragment android:name="com.example.benja.poebrowser.ExplicitModsFilterContainerFragment"
+                            android:id="@+id/explicit_mods_container"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            />
+                        <!--<LinearLayout-->
+                            <!--android:id="@+id/explicit_mods_container"-->
+                            <!--android:layout_marginStart="20dp"-->
+                            <!--android:layout_marginLeft="20dp"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--&gt;-->
+                                <!--<LinearLayout-->
+                                    <!--android:id="@+id/explicit_mods_fields_container"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:orientation="vertical"-->
+                                    <!--/>-->
+                                <!--<Button-->
+                                    <!--android:text="@string/add_more_explicit_mods"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--/>-->
+                        <!--</LinearLayout>-->
+                        <Button
+                            android:id="@+id/save_filter_button"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="@string/save" />
+                </LinearLayout>
+        </ScrollView>
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="257dp"
-        android:layout_marginEnd="148dp"
-        android:layout_marginLeft="148dp"
-        android:layout_marginRight="148dp"
-        android:layout_marginStart="148dp"
-        android:layout_marginTop="28dp"
-        android:text="@string/button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/comments_textbox" />
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

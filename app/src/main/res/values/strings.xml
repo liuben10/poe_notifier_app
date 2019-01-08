@@ -8,4 +8,13 @@
     <string name="filter_json">Filter Json</string>
     <string name="button">Submit</string>
     <string name="list_items">List Items</string>
+    <string name="save">Save</string>
+    <string name="raw_filter_json">Raw Filter Json</string>
+    <string name="league">League</string>
+    <string name="filter_name">filter name</string>
+    <string name="name">Name</string>
+    <string name="add_more_explicit_mods">Add More Explicit Mods</string>
+    <string name="filter_regex">filter_regex</string>
+    <string name="remove">Remove</string>
+    <string name="remove_button">remove_button</string>
 </resources>

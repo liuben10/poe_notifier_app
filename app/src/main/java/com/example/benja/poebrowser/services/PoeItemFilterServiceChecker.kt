@@ -22,8 +22,8 @@ const val ITEMS_LABEL: String = "ITEMS"
 class PoeItemFilterServiceChecker(
         val context: Context
 ) {
-//    val url = "http://10.0.2.2:8080/public_stash_items"
-    val url = "https://codathon-188102.appspot.com/public_stash_items"
+    val url = "http://10.0.2.2:8080/public_stash_items"
+//    val url = "https://codathon-188102.appspot.com/public_stash_items"
     val gson: Gson = Gson()
 
     fun pullAndFilterItems(next_check_id: String) {
@@ -58,6 +58,7 @@ class PoeItemFilterServiceChecker(
 
         PoeAppContext.getRequestQueue(context).add(stringRequest)
     }
+
 
     private fun sendBroadcast(stashes: PoeItemFilterContainer) {
         val intentToBroadcast = Intent(ITEMS_DETECTED_SIGNAL)
