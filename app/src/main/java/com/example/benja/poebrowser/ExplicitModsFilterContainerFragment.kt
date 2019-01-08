@@ -8,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import com.example.poe_app_kt.model.PoeModStringItemFilter
 
 class ExplicitModsFilterContainerFragment : Fragment() {
 
     lateinit var explicitModsFilterContainer: LinearLayout
     lateinit var addExplicitModsButton: Button
-    private var explicitMods: MutableList<Int> = mutableListOf()
+    private var explicitMods: MutableList<ExplicitModFieldFragment> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -29,9 +30,8 @@ class ExplicitModsFilterContainerFragment : Fragment() {
                 val lastCount = if (this.explicitMods.size == 0) {
                     0
                 } else {
-                    this.explicitMods.last() + 1
+                    this.explicitMods.last().rowId.toInt() + 1
                 }
-                this.explicitMods.add(lastCount)
                 val fragmentTag = "explicit_mod_$lastCount"
                 val fragment = ExplicitModFieldFragment()
                 fragment.withRowId(Integer(lastCount))
@@ -40,8 +40,15 @@ class ExplicitModsFilterContainerFragment : Fragment() {
                     transaction.remove(fragment)
                     transaction.commit()
                 }
+                explicitMods.add(fragment)
                 transaction.add(this.explicitModsFilterContainer.id, fragment, fragmentTag)
                 transaction.commit()
         }
+    }
+
+    fun explicitMods(): List<PoeModStringItemFilter> {
+        return this.explicitMods.map {
+            elem -> elem.toPoeItemModFilter()
+        }.filterNotNull()
     }
 }

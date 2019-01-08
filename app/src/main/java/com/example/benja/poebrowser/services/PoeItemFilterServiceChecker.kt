@@ -29,6 +29,10 @@ class PoeItemFilterServiceChecker(
     fun pullAndFilterItems(next_check_id: String) {
         val stashFilterServiceUrl = constructRequesturl(next_check_id)
         val filters = itemFiltersForTest()
+        if (filters == null) {
+            Log.d("Poe-Stash-Filter", "No filters found, not querying")
+            return
+        }
         val stringRequest = PostStringRequest(
                 Request.Method.POST,
                 stashFilterServiceUrl,
@@ -109,12 +113,11 @@ class PoeItemFilterServiceChecker(
         return this.url + "?id=" + next_check_id + "&shouldFilter=true"
     }
 
-    private fun itemFiltersForTest(): String {
-//        val loreweaveFilter = PoeItemFilter("Loreweave Filter", "Betrayal")
-//        loreweaveFilter.name = "Loreweave"
-        val energyShieldFilter = PoeItemFilter("Energy Shield Filter", "Betrayal")
-        energyShieldFilter.explicitMods.add(PoeModStringItemFilter("^\\+(.+) to maximum Energy Shield$", 10))
-//        energyShieldFilter.explicitMods.add(PoeModStringItemFilter("^(.+)% increased Energy Shield$", 10))
-        return gson.toJson(mutableListOf(energyShieldFilter))
+    private fun itemFiltersForTest(): String? {
+        val allFilters = PoeAppContext.getPoeItemFilterDumbDao(this.context).findAll()
+        if (allFilters.size > 0) {
+            return gson.toJson(allFilters)
+        }
+        return null
     }
 }

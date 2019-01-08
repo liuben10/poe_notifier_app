@@ -8,6 +8,7 @@ import com.android.volley.toolbox.Volley
 import com.example.benja.poebrowser.services.PoeItemFilterDao
 import com.example.benja.poebrowser.services.PoeItemFilterServiceChecker
 import com.example.benja.poebrowser.services.PoeNinjaChecker
+import com.google.gson.Gson
 
 class PoeAppContext {
     companion object {
@@ -20,6 +21,16 @@ class PoeAppContext {
                 this.handler = Handler()
             }
             return checkNotNull(this.handler)
+        }
+
+        @Volatile
+        private var parser: Gson? = null
+
+        fun getParser(): Gson {
+            if (parser == null) {
+                this.parser = Gson()
+            }
+            return checkNotNull(this.parser)
         }
 
         @Volatile

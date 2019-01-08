@@ -14,8 +14,6 @@ class PoeNinjaChecker(
 ) {
     val url = "https://poe.ninja/api/Data/GetStats"
 
-    val gson = Gson()
-
     val listeners = arrayListOf<WebListener>()
 
     fun checkPoeNinja() {
@@ -34,7 +32,7 @@ class PoeNinjaChecker(
     }
 
     private fun extractNextChangeId(raw: String): String {
-        val struct = gson.fromJson(raw, PoeNinjaIdContainer::class.java)
+        val struct = PoeAppContext.getParser().fromJson(raw, PoeNinjaIdContainer::class.java)
         return struct!!.next_change_id
     }
 }
