@@ -12,27 +12,21 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
-import android.widget.TextView
 import com.example.benja.poebrowser.model.PoeItem
 import com.example.benja.poebrowser.model.PoeStash
 import com.example.benja.poebrowser.services.ITEMS_LABEL
 import com.example.benja.poebrowser.tasks.UpdateNotifierTask
 
-class PoeItemListFragment : Fragment() {
+class FetchItemsFragment : Fragment() {
 
-    lateinit var receiver: BroadcastReceiver
+    class ItemFilterBroadCastReceiver( val poeItemAdapter: PoeItemListAdapter, val itemsContainer: MutableList<PoeItem>) : BroadcastReceiver() {
 
-    class ItemFilterBroadCastReceiver(val viewToUpdate: ListView) : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            val dao = PoeAppContext.getItemsDao(context!!)
             if (ITEMS_DETECTED_SIGNAL.equals(intent!!.action)) {
-                val body = intent.getStringExtra(ITEMS_LABEL)
-                val poeStash = PoeAppContext.getParser().fromJson<PoeStash>(body, PoeStash::class.java)
-                val adapter = ArrayAdapter<String>(
-                        context,
-                        R.layout.filter_short_detail,
-                        poeStash.items.map { item -> item.toString() }
-                )
-                viewToUpdate.adapter = adapter
+                itemsContainer.addAll(dao.cursorToList(dao.fetchTop5()!!))
+                this.poeItemAdapter.items.addAll(itemsContainer)
+                this.poeItemAdapter.updateData(itemsContainer)
             }
         }
     }
@@ -42,22 +36,13 @@ class PoeItemListFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {// Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.request_fragment, container, false)
-        val contentBody: ListView = view!!.findViewById(R.id.render)
-        this.receiver = PoeItemListFragment.ItemFilterBroadCastReceiver(contentBody)
-        val intentFilter = IntentFilter(ITEMS_DETECTED_SIGNAL)
-        this.activity!!.baseContext.registerReceiver(receiver, intentFilter)
+        val view = inflater.inflate(R.layout.item_fetch_fragment, container, false)
         return view
     }
 
     override fun onStart() {
         super.onStart()
         bindFetchButton()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        this.activity!!.baseContext.unregisterReceiver(this.receiver)
     }
 
     private fun bindFetchButton() {

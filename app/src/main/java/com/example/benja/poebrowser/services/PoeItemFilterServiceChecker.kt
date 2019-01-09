@@ -18,9 +18,10 @@ const val ITEMS_LABEL: String = "ITEMS"
 class PoeItemFilterServiceChecker(
         val context: Context
 ) {
-    val url = "http://10.0.2.2:8080/public_stash_items"
-//    val url = "https://codathon-188102.appspot.com/public_stash_items"
+//    val url = "http://10.0.2.2:8080/public_stash_items"
+    val url = "https://codathon-188102.appspot.com/public_stash_items"
     val gson: Gson = Gson()
+    val dao: PoeItemDao = PoeAppContext.getItemsDao(this.context!!)
 
     fun pullAndFilterItems(next_check_id: String) {
         val stashFilterServiceUrl = constructRequesturl(next_check_id)
@@ -37,8 +38,9 @@ class PoeItemFilterServiceChecker(
                     Log.i("Poe-Stash-Filter", "Was able to parse item list")
                     Log.i("Poe-Stash-Filter", "Found Items=$poeItems")
                     if (poeItems.items_by_stash.isNotEmpty()) {
-                        sendNotification(poeItems, next_check_id)
-                        sendBroadcast(poeItems)
+                        val assocedItems = assocSellerToItem(poeItems)
+//                        sendNotification(poeItems, next_check_id)
+                        sendBroadcast(assocedItems)
                     }
                 },
                 Response.ErrorListener { res ->
@@ -59,10 +61,22 @@ class PoeItemFilterServiceChecker(
         PoeAppContext.getRequestQueue(context).add(stringRequest)
     }
 
+    private fun assocSellerToItem(stashes: PoeItemFilterContainer): List<PoeItem> {
+        val flattened = mutableListOf<PoeItem>()
+        for (stash in stashes.items_by_stash) {
+            val accountName = stash.accountName
+            for (item in stash.items) {
+                item.seller = accountName
+                dao.save(item)
+                flattened.add(item)
+            }
+        }
+        return flattened
+    }
 
-    private fun sendBroadcast(stashes: PoeItemFilterContainer) {
+
+    private fun sendBroadcast(assocedItems: List<PoeItem>) {
         val intentToBroadcast = Intent(ITEMS_DETECTED_SIGNAL)
-        intentToBroadcast.putExtra(ITEMS_LABEL, gson.toJson(stashes)) // TODO Fix this later
         context.sendBroadcast(intentToBroadcast)
     }
 

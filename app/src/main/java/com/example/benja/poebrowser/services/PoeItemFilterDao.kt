@@ -5,8 +5,10 @@ import android.content.Context
 import android.database.Cursor
 import android.util.Log
 import com.example.benja.poebrowser.*
+import com.example.benja.poebrowser.model.Filter
 import com.example.benja.poebrowser.model.PoeItemFilter
 import com.example.poe_app_kt.model.PoeModStringItemFilter
+import java.util.*
 
 class PoeItemFilterDao(val context: Context) {
 
@@ -15,7 +17,7 @@ class PoeItemFilterDao(val context: Context) {
     val MAX_COUNT = 5
 
     init {
-        this.dropTable() // TODO REMOVE FROM TEST
+//        this.dropTable() // TODO REMOVE FROM TEST
         helper.onCreate(db)
     }
 
@@ -26,8 +28,10 @@ class PoeItemFilterDao(val context: Context) {
         } else {
             Log.i("PoeItemFilterDao", "Saving filter = ${itemFilter}")
             val values = ContentValues().apply {
+                put(FilterContract.FilterEntry.ID_NAME, UUID.randomUUID().mostSignificantBits) // Fix to use Typed IDs
                 put(FilterContract.FilterEntry.FILTER_NAME_COLUMN_NAME, itemFilter.filterName)
                 put(FilterContract.FilterEntry.LEAGUE_NAME, itemFilter.league)
+                put(FilterContract.FilterEntry.ITEM_NAME, itemFilter.name)
                 put(FilterContract.FilterEntry.EXPLICIT_MODS_NAME, PoeAppContext.getParser().toJson(itemFilter.explicitMods))
             }
             return db?.insert(FilterContract.FilterEntry.TABLE_NAME, null, values)
@@ -62,12 +66,16 @@ class PoeItemFilterDao(val context: Context) {
     }
 
     fun fromCursor(cursor: Cursor): PoeItemFilter {
+        val id = cursor.getLong(cursor.getColumnIndexOrThrow(FilterContract.FilterEntry.ID_NAME))
         val filterName = cursor.getString(cursor.getColumnIndexOrThrow(FilterContract.FilterEntry.FILTER_NAME_COLUMN_NAME))
         val league = cursor.getString(cursor.getColumnIndexOrThrow(FilterContract.FilterEntry.LEAGUE_NAME))
+        val itemName = cursor.getString(cursor.getColumnIndexOrThrow(FilterContract.FilterEntry.ITEM_NAME))
         val explicitMods = cursor.getString(cursor.getColumnIndexOrThrow(FilterContract.FilterEntry.EXPLICIT_MODS_NAME))
         val explicitModsObj = PoeAppContext.getParser().fromJson<MutableList<PoeModStringItemFilter>>(explicitMods, MutableList::class.java)
         val filter = PoeItemFilter(filterName, league)
+        filter.id = id
         filter.explicitMods = explicitModsObj
+        filter.name = itemName
         return filter
     }
 

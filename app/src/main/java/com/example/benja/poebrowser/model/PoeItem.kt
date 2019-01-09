@@ -4,6 +4,7 @@ data class PoeItem(
         val x: Int = 0,
         val y: Int = 0,
         val ilvl: Int = 0,
+        var id: Long? = null,
         val abyssJewel: Boolean? = null,
         val properties: MutableList<PoeItemProp> = mutableListOf(),
         val artfileName: String? = "",
@@ -11,18 +12,26 @@ data class PoeItem(
         val category: MutableMap<String, List<String>>? = null,
         val corrupted: Boolean? = null,
         val craftedMods: MutableList<String>? = mutableListOf(),
-        val explicitMods: MutableList<String>? = mutableListOf(),
-        val implicitMods: MutableList<String>? = mutableListOf(),
+        var explicitMods: MutableList<String>? = mutableListOf(),
+        var implicitMods: MutableList<String>? = mutableListOf(),
         val enchantMods: MutableList<String>? = mutableListOf(),
         val requirements: MutableList<PoeRequirementSpec>? = mutableListOf(),
         val frameType: Int? = 0,
         var league: String? = "",
         var name: String? = "",
-        val note: String? = "",
+        var note: String? = "",
         val sockets: List<PoeSockets>? = mutableListOf(),
         val inventoryId: String? = "",
-        val utilityMods: List<String>? = mutableListOf()
-) {
+        val utilityMods: List<String>? = mutableListOf(),
+        var seller: String? = ""
+) : Saveable {
+    override fun getSaveableName(): String {
+        return this::class.java.simpleName
+    }
+
+    companion object { // Don't know how to make all implementers have this object so for now coding in each
+        fun getSaveableName(): String = PoeItem::class.java.simpleName
+    }
 
     fun kvString(key: String, value: String?): String {
         return "$key: $value"

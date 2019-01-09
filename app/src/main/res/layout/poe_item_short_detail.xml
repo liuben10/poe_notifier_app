@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/item_name_label"
+            android:layout_width="@dimen/smallElements"
+            android:layout_height="@dimen/element_height" />
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/league_name_label"
+            android:layout_width="@dimen/smallElements"
+            android:layout_height="@dimen/element_height" />
+        <TextView
+            android:id="@+id/league"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/implicit_mods_label"
+            android:layout_width="@dimen/smallElements"
+            android:layout_height="@dimen/element_height" />
+        <TextView
+            android:id="@+id/implicit_mods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/explicit_mods_label"
+            android:layout_width="@dimen/smallElements"
+            android:layout_height="@dimen/element_height" />
+        <TextView
+            android:id="@+id/explicit_mods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/utility_mods_label"
+            android:layout_width="@dimen/smallElements"
+            android:layout_height="@dimen/element_height" />
+        <TextView
+            android:id="@+id/utility_mods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/enchant_mods_label"
+            android:layout_width="@dimen/smallElements"
+            android:layout_height="@dimen/element_height" />
+        <TextView
+            android:id="@+id/enchant_mods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/note_label"
+            android:layout_width="@dimen/smallElements"
+            android:layout_height="@dimen/element_height" />
+        <TextView
+            android:id="@+id/note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/seller_label"
+            android:layout_width="@dimen/smallElements"
+            android:layout_height="@dimen/element_height" />
+        <TextView
+            android:id="@+id/seller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

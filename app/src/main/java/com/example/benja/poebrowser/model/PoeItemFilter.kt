@@ -23,4 +23,12 @@ data class PoeItemFilter (
         var requirements: MutableList<PoeRequirementSpec> = mutableListOf(),
         var name: String = "",
         var sockets: MutableList<PoeSockets> = mutableListOf()
-)
+) : Saveable {
+    override fun getSaveableName(): String {
+        return this::class.java.simpleName
+    }
+
+    companion object { // Don't know how to make all implementers have this object so for now coding in each
+        fun getSaveableName(): String = PoeItemFilter::class.java.simpleName
+    }
+}

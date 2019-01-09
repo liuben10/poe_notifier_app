@@ -1,5 +1,6 @@
 package com.example.benja.poebrowser
 
+import android.provider.BaseColumns
 import com.example.benja.poebrowser.model.PoeItemProp
 import com.example.benja.poebrowser.model.PoeRequirementSpec
 import com.example.benja.poebrowser.model.PoeSockets
@@ -7,7 +8,7 @@ import com.example.poe_app_kt.model.PoeModStringItemFilter
 
 object FilterContract {
     object FilterEntry {
-        const val ID_NAME = "id"
+        const val ID_NAME = BaseColumns._ID
         const val FILTER_NAME_COLUMN_NAME = "filter_name"
         const val LEAGUE_NAME = "league"
         const val REQUIRED_NAME = "required"
