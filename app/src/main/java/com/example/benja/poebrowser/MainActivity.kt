@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import com.example.benja.poebrowser.tasks.PoeModLoader
 import com.example.benja.poebrowser.tasks.UpdateNotifierTask
 
 const val CHANNEL_ID: String = "POE_ITEMS_NOTIFICATION"
@@ -22,11 +24,18 @@ class MainActivity : AppCompatActivity() {
 
     var drawerLayout: DrawerLayout? = null
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.nav_drawer)
         bindDrawerLayout()
         bindToolBar()
+        // -- Test Section -- //
+        val loader = PoeModLoader(this)
+        val loaded = loader.loadPoeMods()
+        print(loaded)
+
+        //////
         PoeAppContext.getPoeItemFilterDao(this)
     }
 

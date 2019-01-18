@@ -21,7 +21,7 @@ data class PoeItemFilter (
         var enchantMods: MutableList<PoeModStringItemFilter> = mutableListOf(),
         var utilityMods: MutableList<PoeModStringItemFilter> = mutableListOf(),
         var requirements: MutableList<PoeRequirementSpec> = mutableListOf(),
-        var name: String = "",
+        var name: String? = "",
         var sockets: MutableList<PoeSockets> = mutableListOf()
 ) : Saveable {
     override fun getSaveableName(): String {
