@@ -15,7 +15,7 @@ class PoeItemDao(context: Context) {
     val parser = PoeAppContext.getParser()
 
     init {
-//        dbHelper.onUpgrade(db,0, 1) // TODO remove these calls
+        dbHelper.onUpgrade(db,0, 1) // TODO remove these calls
     }
 
     fun save(item: PoeItem): Long? {

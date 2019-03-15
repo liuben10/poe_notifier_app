@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="render" type="id">render</item>
+    <item name="render" type="id" />
 </resources>

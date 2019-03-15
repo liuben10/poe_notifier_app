@@ -15,18 +15,25 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import com.example.benja.poebrowser.services.PoeFilterWebSocketListener
 import com.example.benja.poebrowser.tasks.PoeModLoader
 import com.example.benja.poebrowser.tasks.UpdateNotifierTask
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 const val CHANNEL_ID: String = "POE_ITEMS_NOTIFICATION"
 
 class MainActivity : AppCompatActivity() {
 
-    var drawerLayout: DrawerLayout? = null
+    private var drawerLayout: DrawerLayout? = null
+    private var okHttpClient: OkHttpClient? = null
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        okHttpClient = OkHttpClient()
+
         setContentView(R.layout.nav_drawer)
         bindDrawerLayout()
         bindToolBar()
@@ -54,7 +61,16 @@ class MainActivity : AppCompatActivity() {
         val runnable = updateNotify()
         runnable.run()
 
+        initializeWebSocketForTest()
         createNotificationChannel()
+    }
+
+    fun initializeWebSocketForTest() {
+        val listener = PoeFilterWebSocketListener()
+        val req = Request.Builder().url("ws://10.0.2.2:8080/gs-guide-websocket").build()
+        val ws = okHttpClient!!.newWebSocket(req, listener)
+
+        okHttpClient!!.dispatcher().executorService().shutdown()
     }
 
     fun updateNotify(): Runnable {

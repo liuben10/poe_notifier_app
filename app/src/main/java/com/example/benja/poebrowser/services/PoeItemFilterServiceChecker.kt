@@ -18,8 +18,8 @@ const val ITEMS_LABEL: String = "ITEMS"
 class PoeItemFilterServiceChecker(
         val context: Context
 ) {
-//    val url = "http://10.0.2.2:8080/public_stash_items"
-    val url = "https://codathon-188102.appspot.com/public_stash_items"
+    val url = "http://10.0.2.2:8080/public_stash_items"
+//    val url = "https://codathon-188102.appspot.com/public_stash_items"
     val gson: Gson = Gson()
     val dao: PoeItemDao = PoeAppContext.getItemsDao(this.context!!)
 
@@ -60,7 +60,6 @@ class PoeItemFilterServiceChecker(
 
         PoeAppContext.getRequestQueue(context).add(stringRequest)
     }
-
     private fun assocSellerToItem(stashes: PoeItemFilterContainer): List<PoeItem> {
         val flattened = mutableListOf<PoeItem>()
         for (stash in stashes.items_by_stash) {
